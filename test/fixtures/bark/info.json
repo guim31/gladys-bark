@@ -1,0 +1,10 @@
+{
+  "status": 200,
+  "body": {
+    "version": "v2.4.0",
+    "build": "2026-11-06 01:39:11",
+    "arch": "linux/amd64",
+    "commit": "a365aa9ddc9362495efffb3db4358b7c12beb963",
+    "devices": 0
+  }
+}

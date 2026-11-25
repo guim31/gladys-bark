@@ -1,0 +1,8 @@
+{
+  "status": 500,
+  "body": {
+    "code": 500,
+    "message": "push failed: BadDeviceToken",
+    "timestamp": 1795637981
+  }
+}

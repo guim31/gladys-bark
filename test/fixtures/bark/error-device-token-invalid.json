@@ -1,0 +1,8 @@
+{
+  "status": 400,
+  "body": {
+    "code": 400,
+    "message": "failed to get device token: device token invalid",
+    "timestamp": 1795637981
+  }
+}

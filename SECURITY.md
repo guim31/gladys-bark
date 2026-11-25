@@ -30,6 +30,28 @@ Gladys before reporting a problem.
 
 In scope: the code of this repository and the Docker image it publishes.
 
+What the integration handles:
+
+- **Secrets**: the device keys for scenes and the encryption key
+  (integration configuration), and the device key of each user ("My
+  account"). Whoever has a device key can push notifications to that iPhone.
+  Gladys stores them and hands them to the integration; the integration keeps
+  them in memory only, sends the device keys to the configured Bark server in
+  the JSON body of `POST /push` (never in a URL), uses the encryption key
+  locally, and never logs them nor writes them to disk. An error message of
+  the server that echoes a key is scrubbed before it is logged.
+- **`/data`**: `bark-state.json` holds the last known state of the server
+  (online / offline, version, a hash of its address), today's delivery counters
+  and the last notifications sent by scenes (title and text). No key, no
+  address, and never the messages Gladys sends to one user.
+- **Network**: outgoing HTTPS (or HTTP) requests to the Bark server address of
+  the configuration only (`https://api.day.app` by default). Certificates are
+  verified unless "Accept a self-signed certificate" is ticked. Nothing listens
+  for incoming connections.
+- **Content**: notification texts go to the Bark server and to Apple; with
+  the encryption key set, the server and Apple only see the ciphertext of the
+  texts and links (the level, sound and group stay readable).
+
 Out of scope: Gladys Assistant itself (see its
 [security policy](https://github.com/GladysAssistant/Gladys/security/policy)),
-and the third-party services and devices the integration talks to.
+and Bark itself (see [Finb/Bark](https://github.com/Finb/Bark)).
