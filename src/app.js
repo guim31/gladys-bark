@@ -67,7 +67,8 @@ export const RECHECK_DELAY_MS = 30 * 1000;
 export const FAILURE_EVENT_INTERVAL_MS = 15 * 60 * 1000;
 // Gladys waits 5 s for the ack of a message: answer before, even if Bark is slow.
 export const MESSAGE_TIMEOUT_MS = 4000;
-export const ACTION_TIMEOUT_MS = 10_000;
+// The test runs /ping (10 s at most), /info (3 s) then the pushes: under the 30 s of the action.
+export const ACTION_TIMEOUT_MS = 8000;
 
 /** A stable fingerprint of the server address, stored instead of the address itself. */
 const fingerprint = (client) =>
@@ -371,7 +372,9 @@ export function registerHandlers(gladys, options = {}) {
     } catch (err) {
       check().catch(() => {});
       throw new ActionFailure(
-        each(REPORT_TEXT, (text, lang) => text.unreachable(errorText(err, lang))),
+        each(REPORT_TEXT, (text, lang) =>
+          tested ? text.unreachable(errorText(err, lang)) : text.failed(errorText(err, lang)),
+        ),
       );
     }
     check().catch(() => {});

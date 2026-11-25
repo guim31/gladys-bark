@@ -18,7 +18,8 @@ import { LEVEL_DEFAULT, SOUNDS, parseLevel } from '../config.js';
 import { IMAGE_DROPPED, pick } from '../texts.js';
 import { BarkError, ERROR_KINDS } from './client.js';
 
-export const MAX_TITLE_LENGTH = 250;
+// Title and subtitle are cut in UTF-8 bytes too: with the body, under 4 KB.
+export const MAX_TITLE_BYTES = 250;
 // Apple refuses a push over 4 KB: the body is cut in UTF-8 bytes, shorter when
 // encrypted (base64 adds a third).
 export const MAX_BODY_BYTES = 3000;
@@ -34,11 +35,6 @@ export class InvalidMessageError extends Error {
 
 const asText = (value) =>
   typeof value === 'string' ? value.trim() : typeof value === 'number' ? String(value) : '';
-
-const shorten = (text, max) => {
-  const characters = Array.from(text);
-  return characters.length > max ? `${characters.slice(0, max - 1).join('')}…` : text;
-};
 
 /** Cuts a text to a number of UTF-8 bytes, an ellipsis included. */
 export function shortenBytes(text, maxBytes) {
@@ -196,8 +192,8 @@ export function fromSceneAction(fields, config) {
   const group = asText(fields?.group) || config.group;
   return finish(
     {
-      title: shorten(asText(fields?.title), MAX_TITLE_LENGTH),
-      subtitle: shorten(asText(fields?.subtitle), MAX_TITLE_LENGTH),
+      title: shortenBytes(asText(fields?.title), MAX_TITLE_BYTES),
+      subtitle: shortenBytes(asText(fields?.subtitle), MAX_TITLE_BYTES),
       body: shortenBytes(body, bodyLimit(config.encryption_key)),
       level: level ?? config.default_level ?? undefined,
       sound: parseSound(fields?.sound),

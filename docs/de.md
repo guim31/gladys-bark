@@ -46,7 +46,7 @@ Konfiguration aus:
   wähle AES, Modus CBC, Padding PKCS7 und einen Schlüssel mit 16, 24 oder
   32 Zeichen (AES-128, 192 oder 256); gib hier denselben Schlüssel ein. Der IV
   ist für jede Benachrichtigung zufällig: Lass den IV der App, wie er ist.
-  Leer: unverschlüsselt.
+  Leer: unverschlüsselt. Der Schlüssel gilt für alle Nachrichten, auch die persönlichen: Jedes iPhone muss ihn in seiner Bark-App verwenden.
 - **Selbstsigniertes Zertifikat akzeptieren**: nur für eine `https://`-Adresse
   deines eigenen Servers, deren Zertifikat du selbst erstellt hast.
 - **Sprache der Texte der Integration**: die Fehler der Szenenaktion, die
@@ -114,7 +114,7 @@ ausblenden.
 
 - **Bark-Server offline**: Der Server antwortet nicht mehr. Er muss bei zwei
   Prüfungen im Abstand von 30 Sekunden scheitern (alle 5 Minuten eine Prüfung,
-  und direkt nach einem fehlgeschlagenen Versand). Variable: der Fehler.
+  und direkt nach einem Versand, der den Server nicht erreicht hat). Variable: der Fehler.
 - **Bark-Server wieder online**: Der Server antwortet wieder, nachdem er
   offline war. Variable: die Serverversion (leer, wenn unbekannt).
 - **Bark-Benachrichtigung nicht gesendet**: Eine Nachricht konnte nicht
@@ -193,7 +193,8 @@ zeigen nie einen Schlüssel.
   Webadresse.
 - Internet nötig: Jede Benachrichtigung läuft über Apple, auch von deinem
   eigenen Server.
-- Verschlüsselung: nur AES im Modus CBC (weder ECB noch GCM).
+- Verschlüsselung: nur AES im Modus CBC (weder ECB noch GCM), ein Schlüssel für alle iPhones.
+- Keine Serveradresse mit Benutzername und Passwort (Basic-Authentifizierung).
 - Gegen einen echten bark-server v2.4.0 getestet, aber weder mit einem iPhone
   noch in einem echten Gladys: Der letzte Schritt, die Zustellung durch Apple
   an das Telefon, konnte nicht geprüft werden.

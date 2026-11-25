@@ -43,7 +43,7 @@ Configuration screen:
   allows. In the app, open the encryption settings, choose AES, mode CBC,
   padding PKCS7, and a key of 16, 24 or 32 characters (AES-128, 192 or 256);
   enter the same key here. The IV is random for each notification: leave the
-  IV of the app as it is. Empty: not encrypted.
+  IV of the app as it is. Empty: not encrypted. The key applies to every message, personal ones included: every iPhone must use it in its Bark app.
 - **Accept a self-signed certificate**: only for an `https://` address of your
   own server whose certificate you created yourself.
 - **Language of the integration texts**: the errors of the scene action, the
@@ -104,7 +104,7 @@ The widget settings can hide the list and the button.
 
 - **Bark server offline**: the server stopped answering. It must fail two
   checks 30 seconds apart (a check runs every 5 minutes, and right after a
-  failed delivery). Variable: the error.
+  delivery that could not reach the server). Variable: the error.
 - **Bark server back online**: the server answers again after being offline.
   Variable: the server version (empty when unknown).
 - **Bark notification not sent**: a message could not be sent. Filters: the
@@ -175,7 +175,8 @@ only. The logs of the integration give the details; they never show a key.
 - No camera images in Gladys messages: Bark shows images from a web address
   only.
 - Needs Internet: every push goes through Apple, even from your own server.
-- Encryption: AES in CBC mode only (not ECB nor GCM).
+- Encryption: AES in CBC mode only (not ECB nor GCM), one key for every iPhone.
+- No server address with a user name and password (basic authentication).
 - Tested against a real bark-server v2.4.0, but not with an iPhone nor in a
   real Gladys: the last step, Apple's delivery to the phone, could not be
   checked.

@@ -48,7 +48,7 @@ configuración:
   aplicación Bark. En la aplicación, abra los ajustes de cifrado, elija AES,
   modo CBC, relleno PKCS7 y una clave de 16, 24 o 32 caracteres (AES-128, 192
   o 256); introduzca aquí la misma clave. El IV es aleatorio para cada
-  notificación: deje el IV de la aplicación como está. Vacío: sin cifrado.
+  notificación: deje el IV de la aplicación como está. Vacío: sin cifrado. La clave vale para todos los mensajes, también los personales: cada iPhone debe usarla en su aplicación Bark.
 - **Aceptar un certificado autofirmado**: solo para una dirección `https://`
   de su propio servidor cuyo certificado haya creado usted mismo.
 - **Idioma de los textos de la integración**: los errores de la acción de
@@ -112,7 +112,7 @@ Los ajustes del widget permiten ocultar la lista y el botón.
 
 - **Servidor Bark sin conexión**: el servidor ha dejado de responder. Debe
   fallar dos comprobaciones con 30 segundos de diferencia (una comprobación
-  cada 5 minutos, y justo después de un envío fallido). Variable: el error.
+  cada 5 minutos, y justo después de un envío que no pudo llegar al servidor). Variable: el error.
 - **Servidor Bark de nuevo en línea**: el servidor vuelve a responder tras
   estar sin conexión. Variable: la versión del servidor (vacía si se
   desconoce).
@@ -191,7 +191,8 @@ una clave.
   imágenes de una dirección web.
 - Requiere Internet: cada notificación pasa por Apple, incluso desde su propio
   servidor.
-- Cifrado: solo AES en modo CBC (ni ECB ni GCM).
+- Cifrado: solo AES en modo CBC (ni ECB ni GCM), una clave para todos los iPhone.
+- Sin dirección de servidor con usuario y contraseña (autenticación básica).
 - Probada con un bark-server v2.4.0 real, pero ni con un iPhone ni en una
   instalación real de Gladys: el último paso, la entrega de Apple al teléfono,
   no se ha podido comprobar.

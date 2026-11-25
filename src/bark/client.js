@@ -230,7 +230,8 @@ export class BarkClient {
       const response = await this.request(this.url('/info'), {
         method: 'GET',
         insecure: this.insecure,
-        timeoutMs: this.timeoutMs,
+        // Optional and after /ping: short, so a test stays within the 30 s of the action.
+        timeoutMs: Math.min(this.timeoutMs, 3000),
       });
       const info = parseJson(response.body);
       if (response.status === 200 && typeof info?.version === 'string') {
