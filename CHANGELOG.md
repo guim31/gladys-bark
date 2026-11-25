@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-25
+
 ### Added
 
 - Bark as a Gladys notification channel: every message Gladys sends to a user
@@ -29,3 +31,6 @@ the notes of the version's GitHub Release.
   the last scene notifications and a test button, each block hideable.
 - "Send a test notification" action, in four languages (English, French,
   German, Spanish).
+
+[Unreleased]: https://github.com/guim31/gladys-bark/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/guim31/gladys-bark/releases/tag/v1.0.0
