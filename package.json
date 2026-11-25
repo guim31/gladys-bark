@@ -1,8 +1,8 @@
 {
-  "name": "gladys-integration-template-js",
+  "name": "gladys-bark",
   "version": "1.0.0",
   "private": true,
-  "description": "Official starter template to build an external integration for Gladys Assistant with the JavaScript SDK.",
+  "description": "Gladys Assistant integration: notifications on iPhone through the Bark app (api.day.app or a self-hosted bark-server).",
   "type": "module",
   "main": "index.js",
   "scripts": {

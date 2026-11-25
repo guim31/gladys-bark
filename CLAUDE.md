@@ -16,8 +16,8 @@ its only runtime dependency. It started from the official JavaScript template.
 ```bash
 npm install
 npm test                                  # node --test, the built-in runner
-node --test test/devices.test.js          # one file
-node --test --test-name-pattern "plug"    # tests whose name matches
+node --test test/app.test.js              # one file
+node --test --test-name-pattern "scene"   # tests whose name matches
 npm run lint                              # ESLint
 npm run format:check                      # Prettier, as the CI runs it
 npm run format                            # Prettier, fix in place
@@ -32,15 +32,19 @@ pushing.
 
 ```
 index.js                          SDK wiring only: handlers registered before connect()
-src/devices/index.js              registry of the device blueprints + dispatch helpers
-src/devices/<type>.js             one device type per file (buildDevice, onPoll, onSetValue...)
-src/scenes.js                     scene action handlers (manifest `scene_actions`)
-src/widgets.js                    dashboard widget handlers (manifest `widgets`)
-src/config.js                     DEFAULT_CONFIG (mirrors the manifest defaults) + normalization
-src/weather.js                    example driver (Open-Meteo)
-gladys-assistant-integration.json manifest: name, config_schema, actions, image...
-docs/en.md, docs/fr.md            user documentation, re-hosted by Gladys (mandatory)
-test/                             node --test, against the SDK's fake Gladys (integration-sdk/testing)
+src/app.js                        the integration: Gladys messages, scene action, test action,
+                                  widget, health checks, triggers
+src/bark/client.js                Bark server API (/ping, /info, /push), error kinds and reasons
+src/bark/message.js               Gladys message / scene fields → push fields, AES-CBC encryption
+src/bark/http.js                  the one network function (node:http/https, per-request TLS)
+src/config.js                     DEFAULT_CONFIG (mirrors the manifest defaults), levels, sounds,
+                                  device key parsing
+src/history.js, src/store.js      server state and widget statistics, saved under /data
+src/texts.js, src/widgets.js      four-language texts; the dashboard widget
+gladys-assistant-integration.json manifest: config, contact_schema, actions, triggers, widget
+docs/{en,fr,de,es}.md             user documentation, re-hosted by Gladys (mandatory)
+test/                             node --test, against the SDK's fake Gladys and an in-memory
+                                  Bark server (test/helpers/fakeBark.js, test/fixtures/bark)
 .github/scripts/release.mjs       release helpers (manifest bump, changelog), tested in test/
 ```
 
@@ -78,10 +82,34 @@ test/                             node --test, against the SDK's fake Gladys (in
   `type: "provider"`: 5.1.0). `test/manifest.test.js` ties the manifest to the
   code (defaults, action, scene and widget handlers): change both sides
   together.
-- **User-facing text** is bilingual (English and French): action messages,
-  manifest texts, and `docs/en.md` / `docs/fr.md`, kept in sync.
+- **User-facing text** is in four languages (English, French, German,
+  Spanish): action messages, manifest texts, and `docs/*.md`, kept in sync.
 - **Style.** Prettier formats, ESLint catches mistakes. Comments explain why,
   in English. Tests never touch the network.
+
+## Bark
+
+- **API (bark-server v2.4.0, checked in Docker)**: `POST /push` JSON with
+  `device_key`; success `{"code":200,"message":"success"}`. Unknown key: HTTP
+  400 `failed to get device token: failed to get [KEY] device token from
+database` (the key is echoed: scrubbed before any log). A registered key
+  whose Apple token is refused: HTTP 500 `push failed: BadDeviceToken`, then
+  the server forgets the token and answers 400 `device token invalid`: both
+  are `device_gone`. Any unknown path is read as `/:device_key` (400 unknown
+  key, not 404). `GET /ping` → `pong`; `GET /info` gives the version
+  (optional, a proxy may hide it). `device_keys` (batch) exists but answers
+  200 even when every key fails: one request per key instead.
+- **Keys never in a URL**: the legacy `GET /:key/:title/:body` form would put
+  the key and the text in proxy logs; only the JSON form is used.
+- **Encryption** as the Bark app: key and IV are UTF-8 strings used as raw
+  bytes (16/24/32 → AES-128/192/256, CBC, PKCS7), ciphertext in base64 with
+  `iv` alongside. Level, sound, group and `call` stay out of the ciphertext:
+  the server builds the APNs payload from them.
+- **Apple's 4 KB limit**: bodies are cut in UTF-8 bytes (3000, 2000 when
+  encrypted).
+- `transports: ["cloud"]`: even a self-hosted server pushes through APNs.
+- The scene action sends to the configured keys; a personal message only to
+  the key of "My account", never to the shared keys.
 
 ---
 

@@ -1,177 +1,1134 @@
 {
   "manifest_version": 1,
-  "type": "device",
-  "name": "Demo Devices Template",
+  "type": "communication",
+  "name": "Bark",
   "description": {
-    "en": "Starter template showing sensors, a switch, a dimmable light and a smart plug.",
-    "fr": "Template de démarrage : capteurs, interrupteur, lampe variable et prise connectée."
+    "en": "Gladys messages and scene notifications on your iPhone with the Bark app.",
+    "fr": "Les messages de Gladys et des notifications de scène sur votre iPhone avec l'appli Bark.",
+    "de": "Gladys-Nachrichten und Szenen-Benachrichtigungen auf deinem iPhone mit der Bark-App.",
+    "es": "Mensajes de Gladys y notificaciones de escenas en su iPhone con la aplicación Bark."
   },
   "version": "1.0.0",
-  "docker_image": "ghcr.io/gladysassistant/integration-template-js:1.0.0",
+  "docker_image": "ghcr.io/guim31/gladys-bark:1.0.0",
   "gladys_version": ">=5.1.0",
-  "cover_image": "https://raw.githubusercontent.com/GladysAssistant/integration-template-js/master/cover.png",
-  "categories": ["lighting", "security", "environment"],
-  "transports": ["local", "cloud"],
+  "cover_image": "https://raw.githubusercontent.com/guim31/gladys-bark/main/cover.png",
+  "categories": ["notifications"],
+  "transports": ["cloud"],
+  "messaging": {
+    "receive": false
+  },
   "config_schema": [
     {
       "key": "intro",
       "type": "section",
-      "label": { "en": "Getting started", "fr": "Pour commencer" },
+      "label": {
+        "en": "Connect your iPhone",
+        "fr": "Connecter votre iPhone",
+        "de": "Dein iPhone verbinden",
+        "es": "Conectar su iPhone"
+      },
       "description": {
-        "en": "The demo weather station reads real data from the free Open-Meteo API: pick the coordinates to observe. No account, no API key.",
-        "fr": "La station météo de démonstration lit de vraies données via l'API gratuite Open-Meteo : choisissez les coordonnées à observer. Pas de compte, pas de clé d'API."
+        "en": "Install the free Bark app on the iPhone and copy the address it shows (https://api.day.app/…): its key goes below. Each Gladys user can also enter the key of their own iPhone in the \"My account\" block.",
+        "fr": "Installez l'appli gratuite Bark sur l'iPhone et copiez l'adresse qu'elle affiche (https://api.day.app/…) : sa clé va ci-dessous. Chaque utilisateur de Gladys peut aussi saisir la clé de son iPhone dans le bloc « Mon compte ».",
+        "de": "Installiere die kostenlose Bark-App auf dem iPhone und kopiere die angezeigte Adresse (https://api.day.app/…): Der Schlüssel kommt unten hinein. Jeder Gladys-Benutzer kann im Block „Mein Konto“ auch den Schlüssel seines iPhones angeben.",
+        "es": "Instale la aplicación gratuita Bark en el iPhone y copie la dirección que muestra (https://api.day.app/…): su clave va a continuación. Cada usuario de Gladys también puede indicar la clave de su iPhone en el bloque «Mi cuenta»."
       },
       "links": [
         {
-          "url": "https://open-meteo.com/en/docs",
-          "label": { "en": "Open-Meteo documentation", "fr": "Documentation Open-Meteo" }
+          "url": "https://apps.apple.com/app/bark-customed-notifications/id1403753865",
+          "label": {
+            "en": "Bark on the App Store",
+            "fr": "Bark sur l'App Store",
+            "de": "Bark im App Store",
+            "es": "Bark en la App Store"
+          }
+        },
+        {
+          "url": "https://bark.day.app/",
+          "label": {
+            "en": "Bark documentation",
+            "fr": "Documentation de Bark",
+            "de": "Bark-Dokumentation",
+            "es": "Documentación de Bark"
+          }
         }
       ]
     },
     {
-      "key": "latitude",
-      "type": "number",
-      "label": { "en": "Latitude", "fr": "Latitude" },
-      "description": {
-        "en": "Latitude used for the demo weather sensor.",
-        "fr": "Latitude utilisée par le capteur météo de démonstration."
+      "key": "server_url",
+      "type": "string",
+      "label": {
+        "en": "Bark server address",
+        "fr": "Adresse du serveur Bark",
+        "de": "Adresse des Bark-Servers",
+        "es": "Dirección del servidor Bark"
       },
-      "placeholder": { "en": "e.g. 48.8566", "fr": "ex. 48.8566" },
-      "required": true,
-      "default": 48.8566,
-      "min": -90,
-      "max": 90
-    },
-    {
-      "key": "longitude",
-      "type": "number",
-      "label": { "en": "Longitude", "fr": "Longitude" },
       "description": {
-        "en": "Longitude used for the demo weather sensor.",
-        "fr": "Longitude utilisée par le capteur météo de démonstration."
+        "en": "The official server, or your own bark-server: the one chosen in the Bark app.",
+        "fr": "Le serveur officiel, ou votre propre bark-server : celui choisi dans l'appli Bark.",
+        "de": "Der offizielle Server oder dein eigener bark-server: der in der Bark-App gewählte.",
+        "es": "El servidor oficial o su propio bark-server: el elegido en la aplicación Bark."
       },
-      "placeholder": { "en": "e.g. 2.3522", "fr": "ex. 2.3522" },
-      "required": true,
-      "default": 2.3522,
-      "min": -180,
-      "max": 180
-    },
-    {
-      "key": "unit",
-      "type": "select",
-      "label": { "en": "Temperature unit", "fr": "Unité de température" },
+      "placeholder": {
+        "en": "https://api.day.app",
+        "fr": "https://api.day.app",
+        "de": "https://api.day.app",
+        "es": "https://api.day.app"
+      },
       "required": false,
-      "default": "celsius",
+      "default": "https://api.day.app"
+    },
+    {
+      "key": "device_keys",
+      "type": "secret",
+      "label": {
+        "en": "Device keys for scenes",
+        "fr": "Clés d'appareil pour les scènes",
+        "de": "Geräteschlüssel für Szenen",
+        "es": "Claves de dispositivo para escenas"
+      },
+      "description": {
+        "en": "Used by the scene action and the test. Several iPhones: separate the keys with commas. The whole address copied from the app works too.",
+        "fr": "Utilisées par l'action de scène et le test. Plusieurs iPhone : séparez les clés par des virgules. L'adresse entière copiée de l'appli convient aussi.",
+        "de": "Für die Szenenaktion und den Test. Mehrere iPhones: Trenne die Schlüssel durch Kommas. Die ganze aus der App kopierte Adresse geht auch.",
+        "es": "Los usan la acción de escena y la prueba. Varios iPhone: separe las claves con comas. También sirve la dirección completa copiada de la aplicación."
+      },
+      "placeholder": {
+        "en": "Key from the Bark app",
+        "fr": "Clé de l'appli Bark",
+        "de": "Schlüssel aus der Bark-App",
+        "es": "Clave de la aplicación Bark"
+      },
+      "required": false
+    },
+    {
+      "key": "default_level",
+      "type": "select",
+      "label": {
+        "en": "Default level",
+        "fr": "Niveau par défaut",
+        "de": "Standardstufe",
+        "es": "Nivel predeterminado"
+      },
+      "description": {
+        "en": "How iOS presents the notifications. Critical needs the permission granted in the Bark app.",
+        "fr": "Comment iOS présente les notifications. Critique demande l'autorisation accordée dans l'appli Bark.",
+        "de": "Wie iOS die Benachrichtigungen zeigt. Kritisch braucht die Erlaubnis in der Bark-App.",
+        "es": "Cómo presenta iOS las notificaciones. Crítica requiere el permiso concedido en la aplicación Bark."
+      },
+      "required": false,
+      "default": "active",
       "options": [
-        { "value": "celsius", "label": { "en": "Celsius", "fr": "Celsius" } },
-        { "value": "fahrenheit", "label": { "en": "Fahrenheit", "fr": "Fahrenheit" } }
+        {
+          "value": "active",
+          "label": {
+            "en": "Normal: sound and banner",
+            "fr": "Normale : son et bandeau",
+            "de": "Normal: Ton und Banner",
+            "es": "Normal: sonido y aviso"
+          }
+        },
+        {
+          "value": "timeSensitive",
+          "label": {
+            "en": "Time-sensitive: shown even in Focus",
+            "fr": "Urgente : affichée même en mode Concentration",
+            "de": "Zeitkritisch: auch im Fokus-Modus",
+            "es": "Urgente: se muestra incluso en modo Concentración"
+          }
+        },
+        {
+          "value": "passive",
+          "label": {
+            "en": "Passive: silent, in the list only",
+            "fr": "Discrète : silencieuse, dans la liste seulement",
+            "de": "Passiv: lautlos, nur in der Liste",
+            "es": "Pasiva: silenciosa, solo en la lista"
+          }
+        },
+        {
+          "value": "critical",
+          "label": {
+            "en": "Critical: sounds even when muted",
+            "fr": "Critique : sonne même en silencieux",
+            "de": "Kritisch: klingelt auch im Stumm-Modus",
+            "es": "Crítica: suena incluso en silencio"
+          }
+        }
       ]
     },
     {
-      "key": "poll_frequency",
-      "type": "number",
-      "label": { "en": "Refresh interval (s)", "fr": "Intervalle de rafraîchissement (s)" },
+      "key": "group",
+      "type": "string",
+      "label": {
+        "en": "Notification group",
+        "fr": "Groupe des notifications",
+        "de": "Benachrichtigungsgruppe",
+        "es": "Grupo de notificaciones"
+      },
       "description": {
-        "en": "How often sensors are polled, in seconds (one minute minimum).",
-        "fr": "Fréquence d'interrogation des capteurs, en secondes (une minute minimum)."
+        "en": "Bark groups notifications by this name in the app and on the lock screen.",
+        "fr": "Bark regroupe les notifications sous ce nom dans l'appli et sur l'écran verrouillé.",
+        "de": "Bark gruppiert die Benachrichtigungen unter diesem Namen in der App und auf dem Sperrbildschirm.",
+        "es": "Bark agrupa las notificaciones con este nombre en la aplicación y en la pantalla bloqueada."
       },
       "required": false,
-      "default": 300,
-      "min": 60,
-      "max": 3600
+      "default": "Gladys"
+    },
+    {
+      "key": "encryption_key",
+      "type": "secret",
+      "label": {
+        "en": "Encryption key (optional)",
+        "fr": "Clé de chiffrement (facultative)",
+        "de": "Verschlüsselungsschlüssel (optional)",
+        "es": "Clave de cifrado (opcional)"
+      },
+      "description": {
+        "en": "Same key as in the Bark app (Encryption settings: AES, CBC mode, 16, 24 or 32 characters). Empty: not encrypted.",
+        "fr": "Même clé que dans l'appli Bark (réglages de chiffrement : AES, mode CBC, 16, 24 ou 32 caractères). Vide : pas de chiffrement.",
+        "de": "Derselbe Schlüssel wie in der Bark-App (Verschlüsselung: AES, Modus CBC, 16, 24 oder 32 Zeichen). Leer: unverschlüsselt.",
+        "es": "La misma clave que en la aplicación Bark (cifrado: AES, modo CBC, 16, 24 o 32 caracteres). Vacío: sin cifrado."
+      },
+      "required": false
+    },
+    {
+      "key": "allow_self_signed",
+      "type": "boolean",
+      "label": {
+        "en": "Accept a self-signed certificate",
+        "fr": "Accepter un certificat auto-signé",
+        "de": "Selbstsigniertes Zertifikat akzeptieren",
+        "es": "Aceptar un certificado autofirmado"
+      },
+      "description": {
+        "en": "Only for an https:// address whose certificate you created yourself.",
+        "fr": "Seulement pour une adresse en https:// dont vous avez créé le certificat vous-même.",
+        "de": "Nur für eine https://-Adresse, deren Zertifikat du selbst erstellt hast.",
+        "es": "Solo para una dirección https:// cuyo certificado haya creado usted mismo."
+      },
+      "required": false,
+      "default": false
+    },
+    {
+      "key": "language",
+      "type": "select",
+      "label": {
+        "en": "Language of the integration texts",
+        "fr": "Langue des textes de l'intégration",
+        "de": "Sprache der Texte der Integration",
+        "es": "Idioma de los textos de la integración"
+      },
+      "description": {
+        "en": "Used for the errors of the scene action, the test notification and the note added to messages.",
+        "fr": "Pour les erreurs de l'action de scène, la notification de test et la mention ajoutée aux messages.",
+        "de": "Für die Fehler der Szenenaktion, die Testbenachrichtigung und den Hinweis in den Nachrichten.",
+        "es": "Para los errores de la acción de escena, la notificación de prueba y la nota añadida a los mensajes."
+      },
+      "required": false,
+      "default": "fr",
+      "options": [
+        {
+          "value": "en",
+          "label": {
+            "en": "English",
+            "fr": "Anglais",
+            "de": "Englisch",
+            "es": "Inglés"
+          }
+        },
+        {
+          "value": "fr",
+          "label": {
+            "en": "French",
+            "fr": "Français",
+            "de": "Französisch",
+            "es": "Francés"
+          }
+        },
+        {
+          "value": "de",
+          "label": {
+            "en": "German",
+            "fr": "Allemand",
+            "de": "Deutsch",
+            "es": "Alemán"
+          }
+        },
+        {
+          "value": "es",
+          "label": {
+            "en": "Spanish",
+            "fr": "Espagnol",
+            "de": "Spanisch",
+            "es": "Español"
+          }
+        }
+      ]
+    }
+  ],
+  "contact_schema": [
+    {
+      "key": "account",
+      "type": "section",
+      "label": {
+        "en": "Your Bark notifications",
+        "fr": "Vos notifications Bark",
+        "de": "Deine Bark-Benachrichtigungen",
+        "es": "Sus notificaciones Bark"
+      },
+      "description": {
+        "en": "To receive on your iPhone the messages Gladys sends you, paste the key (or the address) shown by YOUR Bark app. Leave it empty to receive nothing.",
+        "fr": "Pour recevoir sur votre iPhone les messages que Gladys vous envoie, collez la clé (ou l'adresse) affichée par VOTRE appli Bark. Laissez vide pour ne rien recevoir.",
+        "de": "Um die Nachrichten von Gladys auf deinem iPhone zu erhalten, füge den Schlüssel (oder die Adresse) DEINER Bark-App ein. Leer lassen, um nichts zu erhalten.",
+        "es": "Para recibir en su iPhone los mensajes que Gladys le envía, pegue la clave (o la dirección) que muestra SU aplicación Bark. Déjelo vacío para no recibir nada."
+      }
+    },
+    {
+      "key": "device_key",
+      "type": "secret",
+      "label": {
+        "en": "Your device key",
+        "fr": "Votre clé d'appareil",
+        "de": "Dein Geräteschlüssel",
+        "es": "Su clave de dispositivo"
+      },
+      "placeholder": {
+        "en": "Key from your Bark app",
+        "fr": "Clé de votre appli Bark",
+        "de": "Schlüssel aus deiner Bark-App",
+        "es": "Clave de su aplicación Bark"
+      },
+      "required": false
+    },
+    {
+      "key": "level",
+      "type": "select",
+      "label": {
+        "en": "Level of your messages",
+        "fr": "Niveau de vos messages",
+        "de": "Stufe deiner Nachrichten",
+        "es": "Nivel de sus mensajes"
+      },
+      "required": false,
+      "options": [
+        {
+          "value": "default",
+          "label": {
+            "en": "Default of the integration",
+            "fr": "Par défaut de l'intégration",
+            "de": "Standard der Integration",
+            "es": "Predeterminado de la integración"
+          }
+        },
+        {
+          "value": "active",
+          "label": {
+            "en": "Normal: sound and banner",
+            "fr": "Normale : son et bandeau",
+            "de": "Normal: Ton und Banner",
+            "es": "Normal: sonido y aviso"
+          }
+        },
+        {
+          "value": "timeSensitive",
+          "label": {
+            "en": "Time-sensitive: shown even in Focus",
+            "fr": "Urgente : affichée même en mode Concentration",
+            "de": "Zeitkritisch: auch im Fokus-Modus",
+            "es": "Urgente: se muestra incluso en modo Concentración"
+          }
+        },
+        {
+          "value": "passive",
+          "label": {
+            "en": "Passive: silent, in the list only",
+            "fr": "Discrète : silencieuse, dans la liste seulement",
+            "de": "Passiv: lautlos, nur in der Liste",
+            "es": "Pasiva: silenciosa, solo en la lista"
+          }
+        },
+        {
+          "value": "critical",
+          "label": {
+            "en": "Critical: sounds even when muted",
+            "fr": "Critique : sonne même en silencieux",
+            "de": "Kritisch: klingelt auch im Stumm-Modus",
+            "es": "Crítica: suena incluso en silencio"
+          }
+        }
+      ]
     }
   ],
   "actions": [
     {
-      "key": "test_weather",
-      "label": { "en": "Test the weather provider", "fr": "Tester le fournisseur météo" },
+      "key": "test_connection",
+      "label": {
+        "en": "Send a test notification",
+        "fr": "Envoyer une notification de test",
+        "de": "Testbenachrichtigung senden",
+        "es": "Enviar una notificación de prueba"
+      },
+      "description": {
+        "en": "Checks the server, then sends a notification to the device keys for scenes.",
+        "fr": "Vérifie le serveur, puis envoie une notification aux clés d'appareil pour les scènes.",
+        "de": "Prüft den Server und sendet dann eine Benachrichtigung an die Geräteschlüssel für Szenen.",
+        "es": "Comprueba el servidor y envía una notificación a las claves de dispositivo para escenas."
+      },
       "timeout_seconds": 30
-    },
-    {
-      "key": "identify",
-      "label": { "en": "Identify a device", "fr": "Identifier un appareil" },
-      "fields": [
-        {
-          "key": "device",
-          "type": "select",
-          "source": "devices",
-          "label": { "en": "Device", "fr": "Appareil" },
-          "required": true
-        }
-      ]
     }
   ],
   "scene_triggers": [
     {
-      "key": "motion_detected",
-      "label": { "en": "Motion detected", "fr": "Mouvement détecté" },
+      "key": "server_offline",
+      "label": {
+        "en": "Bark server offline",
+        "fr": "Serveur Bark hors ligne",
+        "de": "Bark-Server offline",
+        "es": "Servidor Bark sin conexión"
+      },
       "description": {
-        "en": "A demo motion sensor saw a person or an animal move.",
-        "fr": "Un détecteur de démonstration a vu bouger une personne ou un animal."
+        "en": "The Bark server stopped answering (two checks 30 seconds apart).",
+        "fr": "Le serveur Bark ne répond plus (deux vérifications à 30 secondes d'écart).",
+        "de": "Der Bark-Server antwortet nicht mehr (zwei Prüfungen im Abstand von 30 Sekunden).",
+        "es": "El servidor Bark ha dejado de responder (dos comprobaciones con 30 segundos de diferencia)."
+      },
+      "variables": [
+        {
+          "key": "error",
+          "type": "string",
+          "label": {
+            "en": "Error",
+            "fr": "Erreur",
+            "de": "Fehler",
+            "es": "Error"
+          }
+        }
+      ]
+    },
+    {
+      "key": "server_online",
+      "label": {
+        "en": "Bark server back online",
+        "fr": "Serveur Bark de retour",
+        "de": "Bark-Server wieder online",
+        "es": "Servidor Bark de nuevo en línea"
+      },
+      "description": {
+        "en": "The Bark server answers again after being offline.",
+        "fr": "Le serveur Bark répond de nouveau après avoir été hors ligne.",
+        "de": "Der Bark-Server antwortet wieder, nachdem er offline war.",
+        "es": "El servidor Bark vuelve a responder tras estar sin conexión."
+      },
+      "variables": [
+        {
+          "key": "version",
+          "type": "string",
+          "label": {
+            "en": "Server version (empty when unknown)",
+            "fr": "Version du serveur (vide si inconnue)",
+            "de": "Serverversion (leer, wenn unbekannt)",
+            "es": "Versión del servidor (vacía si se desconoce)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "delivery_failed",
+      "label": {
+        "en": "Bark notification not sent",
+        "fr": "Notification Bark non envoyée",
+        "de": "Bark-Benachrichtigung nicht gesendet",
+        "es": "Notificación Bark no enviada"
+      },
+      "description": {
+        "en": "A message could not be sent. At most once per reason every 15 minutes.",
+        "fr": "Un message n'a pas pu être envoyé. Au plus une fois par raison toutes les 15 minutes.",
+        "de": "Eine Nachricht konnte nicht gesendet werden. Höchstens einmal pro Grund alle 15 Minuten.",
+        "es": "No se ha podido enviar un mensaje. Como máximo una vez por motivo cada 15 minutos."
       },
       "fields": [
         {
-          "key": "device",
-          "type": "select",
-          "source": "devices",
-          "label": { "en": "Sensor", "fr": "Détecteur" }
+          "key": "reason",
+          "type": "multi_select",
+          "label": {
+            "en": "Reason",
+            "fr": "Raison",
+            "de": "Grund",
+            "es": "Motivo"
+          },
+          "options": [
+            {
+              "value": "unreachable",
+              "label": {
+                "en": "Server unreachable",
+                "fr": "Serveur injoignable",
+                "de": "Server nicht erreichbar",
+                "es": "Servidor inaccesible"
+              }
+            },
+            {
+              "value": "key",
+              "label": {
+                "en": "Device key missing or refused",
+                "fr": "Clé d'appareil absente ou refusée",
+                "de": "Geräteschlüssel fehlt oder abgelehnt",
+                "es": "Clave de dispositivo ausente o rechazada"
+              }
+            },
+            {
+              "value": "configuration",
+              "label": {
+                "en": "Configuration incomplete",
+                "fr": "Configuration incomplète",
+                "de": "Konfiguration unvollständig",
+                "es": "Configuración incompleta"
+              }
+            },
+            {
+              "value": "rejected",
+              "label": {
+                "en": "Message refused",
+                "fr": "Message refusé",
+                "de": "Nachricht abgelehnt",
+                "es": "Mensaje rechazado"
+              }
+            }
+          ]
         },
         {
-          "key": "target",
+          "key": "origin",
           "type": "multi_select",
-          "label": { "en": "What moved", "fr": "Ce qui a bougé" },
+          "label": {
+            "en": "Sent by",
+            "fr": "Envoyé par",
+            "de": "Gesendet von",
+            "es": "Enviado por"
+          },
           "options": [
-            { "value": "person", "label": { "en": "Person", "fr": "Personne" } },
-            { "value": "animal", "label": { "en": "Animal", "fr": "Animal" } }
+            {
+              "value": "gladys_message",
+              "label": {
+                "en": "A Gladys message",
+                "fr": "Un message de Gladys",
+                "de": "Eine Gladys-Nachricht",
+                "es": "Un mensaje de Gladys"
+              }
+            },
+            {
+              "value": "scene_action",
+              "label": {
+                "en": "The Bark scene action",
+                "fr": "L'action de scène Bark",
+                "de": "Die Bark-Szenenaktion",
+                "es": "La acción de escena Bark"
+              }
+            }
           ]
         }
       ],
       "variables": [
         {
-          "key": "target",
+          "key": "reason",
           "type": "string",
-          "label": { "en": "What moved", "fr": "Ce qui a bougé" }
+          "label": {
+            "en": "Reason",
+            "fr": "Raison",
+            "de": "Grund",
+            "es": "Motivo"
+          }
+        },
+        {
+          "key": "origin",
+          "type": "string",
+          "label": {
+            "en": "Sent by",
+            "fr": "Envoyé par",
+            "de": "Gesendet von",
+            "es": "Enviado por"
+          }
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "label": {
+            "en": "Error",
+            "fr": "Erreur",
+            "de": "Fehler",
+            "es": "Error"
+          }
         }
       ]
     }
   ],
   "scene_actions": [
     {
-      "key": "identify_device",
-      "label": { "en": "Identify a device", "fr": "Identifier un appareil" },
-      "description": {
-        "en": "Make a device signal itself (the demo light blinks).",
-        "fr": "Fait se signaler un appareil (la lampe de démonstration clignote)."
+      "key": "send_notification",
+      "label": {
+        "en": "Send a Bark notification",
+        "fr": "Envoyer une notification Bark",
+        "de": "Bark-Benachrichtigung senden",
+        "es": "Enviar una notificación Bark"
       },
-      "timeout_seconds": 15,
+      "description": {
+        "en": "With title, level, sound, link and image, to the device keys for scenes.",
+        "fr": "Avec titre, niveau, son, lien et image, aux clés d'appareil pour les scènes.",
+        "de": "Mit Titel, Stufe, Ton, Link und Bild, an die Geräteschlüssel für Szenen.",
+        "es": "Con título, nivel, sonido, enlace e imagen, a las claves de dispositivo para escenas."
+      },
+      "timeout_seconds": 20,
       "fields": [
         {
-          "key": "device",
-          "type": "select",
-          "source": "devices",
-          "label": { "en": "Device", "fr": "Appareil" },
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Title",
+            "fr": "Titre",
+            "de": "Titel",
+            "es": "Título"
+          }
+        },
+        {
+          "key": "subtitle",
+          "type": "string",
+          "label": {
+            "en": "Subtitle",
+            "fr": "Sous-titre",
+            "de": "Untertitel",
+            "es": "Subtítulo"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Message",
+            "fr": "Message",
+            "de": "Nachricht",
+            "es": "Mensaje"
+          },
           "required": true
+        },
+        {
+          "key": "level",
+          "type": "select",
+          "label": {
+            "en": "Level",
+            "fr": "Niveau",
+            "de": "Stufe",
+            "es": "Nivel"
+          },
+          "required": false,
+          "options": [
+            {
+              "value": "default",
+              "label": {
+                "en": "Default of the integration",
+                "fr": "Par défaut de l'intégration",
+                "de": "Standard der Integration",
+                "es": "Predeterminado de la integración"
+              }
+            },
+            {
+              "value": "active",
+              "label": {
+                "en": "Normal: sound and banner",
+                "fr": "Normale : son et bandeau",
+                "de": "Normal: Ton und Banner",
+                "es": "Normal: sonido y aviso"
+              }
+            },
+            {
+              "value": "timeSensitive",
+              "label": {
+                "en": "Time-sensitive: shown even in Focus",
+                "fr": "Urgente : affichée même en mode Concentration",
+                "de": "Zeitkritisch: auch im Fokus-Modus",
+                "es": "Urgente: se muestra incluso en modo Concentración"
+              }
+            },
+            {
+              "value": "passive",
+              "label": {
+                "en": "Passive: silent, in the list only",
+                "fr": "Discrète : silencieuse, dans la liste seulement",
+                "de": "Passiv: lautlos, nur in der Liste",
+                "es": "Pasiva: silenciosa, solo en la lista"
+              }
+            },
+            {
+              "value": "critical",
+              "label": {
+                "en": "Critical: sounds even when muted",
+                "fr": "Critique : sonne même en silencieux",
+                "de": "Kritisch: klingelt auch im Stumm-Modus",
+                "es": "Crítica: suena incluso en silencio"
+              }
+            }
+          ]
+        },
+        {
+          "key": "sound",
+          "type": "select",
+          "label": {
+            "en": "Sound",
+            "fr": "Son",
+            "de": "Ton",
+            "es": "Sonido"
+          },
+          "required": false,
+          "options": [
+            {
+              "value": "default",
+              "label": {
+                "en": "Default of the Bark app",
+                "fr": "Par défaut de l'appli Bark",
+                "de": "Standard der Bark-App",
+                "es": "Predeterminado de la aplicación Bark"
+              }
+            },
+            {
+              "value": "alarm",
+              "label": {
+                "en": "alarm",
+                "fr": "alarm",
+                "de": "alarm",
+                "es": "alarm"
+              }
+            },
+            {
+              "value": "anticipate",
+              "label": {
+                "en": "anticipate",
+                "fr": "anticipate",
+                "de": "anticipate",
+                "es": "anticipate"
+              }
+            },
+            {
+              "value": "bell",
+              "label": {
+                "en": "bell",
+                "fr": "bell",
+                "de": "bell",
+                "es": "bell"
+              }
+            },
+            {
+              "value": "birdsong",
+              "label": {
+                "en": "birdsong",
+                "fr": "birdsong",
+                "de": "birdsong",
+                "es": "birdsong"
+              }
+            },
+            {
+              "value": "bloom",
+              "label": {
+                "en": "bloom",
+                "fr": "bloom",
+                "de": "bloom",
+                "es": "bloom"
+              }
+            },
+            {
+              "value": "calypso",
+              "label": {
+                "en": "calypso",
+                "fr": "calypso",
+                "de": "calypso",
+                "es": "calypso"
+              }
+            },
+            {
+              "value": "chime",
+              "label": {
+                "en": "chime",
+                "fr": "chime",
+                "de": "chime",
+                "es": "chime"
+              }
+            },
+            {
+              "value": "choo",
+              "label": {
+                "en": "choo",
+                "fr": "choo",
+                "de": "choo",
+                "es": "choo"
+              }
+            },
+            {
+              "value": "descent",
+              "label": {
+                "en": "descent",
+                "fr": "descent",
+                "de": "descent",
+                "es": "descent"
+              }
+            },
+            {
+              "value": "electronic",
+              "label": {
+                "en": "electronic",
+                "fr": "electronic",
+                "de": "electronic",
+                "es": "electronic"
+              }
+            },
+            {
+              "value": "fanfare",
+              "label": {
+                "en": "fanfare",
+                "fr": "fanfare",
+                "de": "fanfare",
+                "es": "fanfare"
+              }
+            },
+            {
+              "value": "glass",
+              "label": {
+                "en": "glass",
+                "fr": "glass",
+                "de": "glass",
+                "es": "glass"
+              }
+            },
+            {
+              "value": "gotosleep",
+              "label": {
+                "en": "gotosleep",
+                "fr": "gotosleep",
+                "de": "gotosleep",
+                "es": "gotosleep"
+              }
+            },
+            {
+              "value": "healthnotification",
+              "label": {
+                "en": "healthnotification",
+                "fr": "healthnotification",
+                "de": "healthnotification",
+                "es": "healthnotification"
+              }
+            },
+            {
+              "value": "horn",
+              "label": {
+                "en": "horn",
+                "fr": "horn",
+                "de": "horn",
+                "es": "horn"
+              }
+            },
+            {
+              "value": "ladder",
+              "label": {
+                "en": "ladder",
+                "fr": "ladder",
+                "de": "ladder",
+                "es": "ladder"
+              }
+            },
+            {
+              "value": "mailsent",
+              "label": {
+                "en": "mailsent",
+                "fr": "mailsent",
+                "de": "mailsent",
+                "es": "mailsent"
+              }
+            },
+            {
+              "value": "minuet",
+              "label": {
+                "en": "minuet",
+                "fr": "minuet",
+                "de": "minuet",
+                "es": "minuet"
+              }
+            },
+            {
+              "value": "multiwayinvitation",
+              "label": {
+                "en": "multiwayinvitation",
+                "fr": "multiwayinvitation",
+                "de": "multiwayinvitation",
+                "es": "multiwayinvitation"
+              }
+            },
+            {
+              "value": "newmail",
+              "label": {
+                "en": "newmail",
+                "fr": "newmail",
+                "de": "newmail",
+                "es": "newmail"
+              }
+            },
+            {
+              "value": "newsflash",
+              "label": {
+                "en": "newsflash",
+                "fr": "newsflash",
+                "de": "newsflash",
+                "es": "newsflash"
+              }
+            },
+            {
+              "value": "noir",
+              "label": {
+                "en": "noir",
+                "fr": "noir",
+                "de": "noir",
+                "es": "noir"
+              }
+            },
+            {
+              "value": "paymentsuccess",
+              "label": {
+                "en": "paymentsuccess",
+                "fr": "paymentsuccess",
+                "de": "paymentsuccess",
+                "es": "paymentsuccess"
+              }
+            },
+            {
+              "value": "shake",
+              "label": {
+                "en": "shake",
+                "fr": "shake",
+                "de": "shake",
+                "es": "shake"
+              }
+            },
+            {
+              "value": "sherwoodforest",
+              "label": {
+                "en": "sherwoodforest",
+                "fr": "sherwoodforest",
+                "de": "sherwoodforest",
+                "es": "sherwoodforest"
+              }
+            },
+            {
+              "value": "silence",
+              "label": {
+                "en": "silence",
+                "fr": "silence",
+                "de": "silence",
+                "es": "silence"
+              }
+            },
+            {
+              "value": "spell",
+              "label": {
+                "en": "spell",
+                "fr": "spell",
+                "de": "spell",
+                "es": "spell"
+              }
+            },
+            {
+              "value": "suspense",
+              "label": {
+                "en": "suspense",
+                "fr": "suspense",
+                "de": "suspense",
+                "es": "suspense"
+              }
+            },
+            {
+              "value": "telegraph",
+              "label": {
+                "en": "telegraph",
+                "fr": "telegraph",
+                "de": "telegraph",
+                "es": "telegraph"
+              }
+            },
+            {
+              "value": "tiptoes",
+              "label": {
+                "en": "tiptoes",
+                "fr": "tiptoes",
+                "de": "tiptoes",
+                "es": "tiptoes"
+              }
+            },
+            {
+              "value": "typewriters",
+              "label": {
+                "en": "typewriters",
+                "fr": "typewriters",
+                "de": "typewriters",
+                "es": "typewriters"
+              }
+            },
+            {
+              "value": "update",
+              "label": {
+                "en": "update",
+                "fr": "update",
+                "de": "update",
+                "es": "update"
+              }
+            }
+          ]
+        },
+        {
+          "key": "call",
+          "type": "boolean",
+          "label": {
+            "en": "Ring for 30 seconds",
+            "fr": "Sonner pendant 30 secondes",
+            "de": "30 Sekunden lang klingeln",
+            "es": "Sonar durante 30 segundos"
+          }
+        },
+        {
+          "key": "group",
+          "type": "string",
+          "label": {
+            "en": "Group",
+            "fr": "Groupe",
+            "de": "Gruppe",
+            "es": "Grupo"
+          },
+          "placeholder": {
+            "en": "Empty: the group of the configuration",
+            "fr": "Vide : le groupe de la configuration",
+            "de": "Leer: die Gruppe der Konfiguration",
+            "es": "Vacío: el grupo de la configuración"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "Link opened on tap",
+            "fr": "Lien ouvert au toucher",
+            "de": "Link beim Antippen",
+            "es": "Enlace al tocar"
+          },
+          "placeholder": {
+            "en": "https://…",
+            "fr": "https://…",
+            "de": "https://…",
+            "es": "https://…"
+          }
+        },
+        {
+          "key": "image",
+          "type": "string",
+          "label": {
+            "en": "Image address",
+            "fr": "Adresse d'une image",
+            "de": "Bildadresse",
+            "es": "Dirección de una imagen"
+          },
+          "placeholder": {
+            "en": "https://…/image.jpg",
+            "fr": "https://…/image.jpg",
+            "de": "https://…/image.jpg",
+            "es": "https://…/image.jpg"
+          }
+        },
+        {
+          "key": "icon",
+          "type": "string",
+          "label": {
+            "en": "Icon address",
+            "fr": "Adresse d'une icône",
+            "de": "Symboladresse",
+            "es": "Dirección de un icono"
+          },
+          "placeholder": {
+            "en": "https://…/icon.png",
+            "fr": "https://…/icon.png",
+            "de": "https://…/icon.png",
+            "es": "https://…/icon.png"
+          }
         }
       ],
       "outputs": [
         {
-          "key": "signalled",
+          "key": "delivered",
           "type": "boolean",
-          "label": { "en": "Device signalled", "fr": "Appareil signalé" }
+          "label": {
+            "en": "Notification sent",
+            "fr": "Notification envoyée",
+            "de": "Benachrichtigung gesendet",
+            "es": "Notificación enviada"
+          }
+        },
+        {
+          "key": "sent_count",
+          "type": "number",
+          "label": {
+            "en": "Devices reached",
+            "fr": "Appareils atteints",
+            "de": "Erreichte Geräte",
+            "es": "Dispositivos alcanzados"
+          }
+        },
+        {
+          "key": "error",
+          "type": "string",
+          "label": {
+            "en": "Error",
+            "fr": "Erreur",
+            "de": "Fehler",
+            "es": "Error"
+          }
         }
       ]
     }
   ],
   "widgets": [
     {
-      "key": "demo_status",
-      "label": { "en": "Demo status", "fr": "État de la démo" },
-      "description": {
-        "en": "Live temperature and plug power, plug connection and observed location.",
-        "fr": "Température et puissance en direct, connexion de la prise, position observée."
+      "key": "bark",
+      "label": {
+        "en": "Bark",
+        "fr": "Bark",
+        "de": "Bark",
+        "es": "Bark"
       },
-      "icon": "activity",
-      "action_timeout_seconds": 15
+      "description": {
+        "en": "Server status, notifications sent today and the last scene notifications.",
+        "fr": "État du serveur, notifications du jour et dernières notifications des scènes.",
+        "de": "Serverstatus, heutige Benachrichtigungen und die letzten Szenen-Benachrichtigungen.",
+        "es": "Estado del servidor, notificaciones de hoy y últimas notificaciones de escenas."
+      },
+      "icon": "bell",
+      "action_timeout_seconds": 30,
+      "settings": [
+        {
+          "key": "show_recent",
+          "type": "boolean",
+          "label": {
+            "en": "Show the last scene notifications",
+            "fr": "Afficher les dernières notifications des scènes",
+            "de": "Letzte Szenen-Benachrichtigungen anzeigen",
+            "es": "Mostrar las últimas notificaciones de escenas"
+          },
+          "required": false,
+          "default": true
+        },
+        {
+          "key": "show_test_button",
+          "type": "boolean",
+          "label": {
+            "en": "Show the test button",
+            "fr": "Afficher le bouton de test",
+            "de": "Test-Schaltfläche anzeigen",
+            "es": "Mostrar el botón de prueba"
+          },
+          "required": false,
+          "default": true
+        }
+      ]
     }
   ]
 }
